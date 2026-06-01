@@ -14,8 +14,8 @@ import Decimal from 'decimal.js';
   selector: 'app-update-employee',
   standalone: true,
   imports: [CommonModule, FormlyModule, FormlyBootstrapModule, ReactiveFormsModule],
-  templateUrl: './update-employee.component.html',
-  styleUrls: ['./update-employee.component.css']
+  templateUrl: './update-employee.html',
+  styleUrls: ['./update-employee.css']
 })
 export class UpdateEmployeeComponent implements OnInit {
   form = new FormGroup({});
@@ -57,9 +57,6 @@ export class UpdateEmployeeComponent implements OnInit {
     } else {
       this.pageTitle = 'Create Employee';
     }
-
-    // Set the browser tab title
-    this.titleService.setTitle(this.pageTitle);
   }
 
   fields: FormlyFieldConfig[] = [
@@ -192,12 +189,11 @@ export class UpdateEmployeeComponent implements OnInit {
     this.options.resetModel?.(this.model);
     this.showSuccess = true;
 
-    setTimeout(() => {
-      this.showSuccess = false;
-      // After save, navigate back to list for a clearer UX
-      this.selectedEmployeeService.clear();
-      this.router.navigate(['/employees']);
-    }, 4000);
+    this.showSuccess = false;
+    this.selectedEmployeeService.clear();
+    this.router.navigate(['/employees'], {
+    skipLocationChange: true
+    });
   }
 }
 

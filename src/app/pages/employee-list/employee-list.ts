@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { SelectedEmployeeService } from '../../services/selected-employee.service';
 import { Employee } from '../../models/employee.model';
-import { EmployeeViewModalComponent } from '../../shared/employee-view-modal.component';
+import { EmployeeViewModalComponent } from '../../shared/employee-view-modal';
 
 import { WjGridModule } from '@mescius/wijmo.angular2.grid';
 import { WjGridFilterModule } from '@mescius/wijmo.angular2.grid.filter';
@@ -34,8 +34,8 @@ interface EmployeeGridRow extends Employee {
     WjGridSearchModule,
     WjInputModule
   ],
-  templateUrl: './employee-list.component.html',
-  styleUrls: ['./employee-list.component.css']
+  templateUrl: './employee-list.html',
+  styleUrls: ['./employee-list.css']
 })
 export class EmployeeListComponent implements OnInit, AfterViewInit {
 
@@ -96,7 +96,9 @@ export class EmployeeListComponent implements OnInit, AfterViewInit {
   /** Edit */
   editEmployee(id: number): void {
     this.selectedEmployeeService.setSelected(id);
-    this.router.navigate(['/update-employee']);
+    this.router.navigate(['/update-employee'], {
+    skipLocationChange: true
+    });
   }
 
   /** Delete */
