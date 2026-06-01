@@ -1,110 +1,136 @@
 <div class="container py-5">
-
   <div class="row">
     <div class="col-lg-12">
-
-      <div class="card shadow-sm border-0">
-
-        <!-- Header -->
-        <div class="card-header bg-primary text-white py-3">
-          <h2 class="mb-0">
-            <i class="bi bi-people-fill"></i>
-            Employee List
-          </h2>
-        </div>
+      <div class="card employee-card border-0">
         
-    <div class="row">
-        <!-- search box -->
-        <div class="toolbar-item col-sm-3 col-md-5 p-4">
-            <wj-flex-grid-search [placeholder]="'Search'" [grid]="flex" cssMatch="">
-            </wj-flex-grid-search>
+        <!-- Header -->
+        <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+          <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+            <h2 class="mb-0 fw-semibold d-flex align-items-center header-title">
+              <i class="bi bi-people-fill text-primary me-3 fs-4"></i>
+              Employee List
+            </h2>
+            <button class="btn btn-primary rounded-pill px-4 py-2 fw-medium d-flex align-items-center justify-content-center btn-add">
+              <i class="bi bi-plus-lg me-2"></i>
+              Add Employee
+            </button>
+          </div>
         </div>
-    </div>
 
         <!-- Body -->
         <div class="card-body p-4">
-
-          <!-- Empty -->
-          <div *ngIf="employees.length === 0" class="alert alert-warning">
-            <i class="bi bi-exclamation-circle-fill"></i>
-            <strong>No employees found.</strong>
+          <!-- Toolbar -->
+          <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+            <div class="search-container">
+              <wj-flex-grid-search
+                class="modern-search"
+                [placeholder]="'Search employees...'"
+                [grid]="flex">
+              </wj-flex-grid-search>
+            </div>
+            <div class="total-badge text-muted">
+              Total Employees: <span class="badge-count text-primary fw-semibold">{{ employees.length }}</span>
+            </div>
           </div>
 
-          <!-- Wijmo Grid -->
-<wj-flex-grid
-  *ngIf="employees.length > 0"
-  #flex
-  class="employee-grid"
-  [itemsSource]="employees"
-  [autoGenerateColumns]="false"
-  [isReadOnly]="false"
-  [allowAddNew]="false"
-  [allowDelete]="true"
-  [allowSorting]="true"
-  [allowDragging]="'Both'"
-  [allowResizing]="'Both'"
-  [selectionMode]="'RowRange'"
-  [showMarquee]="true"
-  [headersVisibility]="'All'"
-  [stickyHeaders]="true"
->
+          <!-- Empty State -->
+          <div *ngIf="employees.length === 0" class="alert alert-warning border-0 rounded-4 p-4 d-flex align-items-center">
+            <i class="bi bi-exclamation-circle-fill me-3 fs-4 text-warning"></i>
+            <div>
+              <strong class="d-block mb-1">No data available</strong>
+              <span class="text-muted small">Try adjusting your search criteria or adding a new employee.</span>
+            </div>
+          </div>
 
-  <wj-flex-grid-column header="Name" binding="name" [width]="180"></wj-flex-grid-column>
+          <!-- Grid Wrapper to clip grid borders accurately -->
+          <div class="grid-wrapper" *ngIf="employees.length > 0">
+            <wj-flex-grid
+              #flex
+              class="employee-grid"
+              [itemsSource]="employees"
+              [autoGenerateColumns]="false"
+              [isReadOnly]="true"
+              [allowAddNew]="false"
+              [allowDelete]="false"
+              [allowSorting]="true"
+              [allowDragging]="'Both'"
+              [allowResizing]="'Both'"
+              [selectionMode]="'Row'"
+              [showMarquee]="false"
+              [headersVisibility]="'Column'"
+              [stickyHeaders]="true">
 
-  <wj-flex-grid-column header="Surname" binding="surname" [width]="180"></wj-flex-grid-column>
+              <wj-flex-grid-column
+                header="NAME"
+                binding="name"
+                [width]="'*'">
+              </wj-flex-grid-column>
 
-  <!-- <wj-flex-grid-column header="Date" binding="dateOfBirth" format="MMM d yyyy" [isRequired]="false" [width]="130" [editor]="theInputDate"></wj-flex-grid-column> -->
+              <wj-flex-grid-column
+                header="SURNAME"
+                binding="surname"
+                [width]="'*'">
+              </wj-flex-grid-column>
 
-  <wj-flex-grid-column header="Department" binding="department" [width]="180"></wj-flex-grid-column>  
+              <!-- Department Badge Template -->
+              <wj-flex-grid-column
+                header="DEPARTMENT"
+                [width]="160"
+                align="center">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
+                  <span class="dept-badge" [ngClass]="{
+                    'dept-it': item.department === 'IT',
+                    'dept-finance': item.department === 'Finance',
+                    'dept-hr': item.department === 'HR',
+                    'dept-marketing': item.department === 'Marketing'
+                  }">
+                    {{ item.department }}
+                  </span>
+                </ng-template>
+              </wj-flex-grid-column>
 
-  <!-- <wj-flex-grid-column header="Responsibilities" binding="responsibilitiesText" [width]="200"></wj-flex-grid-column> -->
+              <wj-flex-grid-column
+                header="DAILY SALARY"
+                binding="dailySalaryFormatted"
+                align="left"
+                [width]="160">
+              </wj-flex-grid-column>
 
-  <wj-flex-grid-column header="Daily Salary" binding="dailySalaryFormatted" align="right" [width]="140"></wj-flex-grid-column>
+              <!-- Minimalist Actions Template -->
+              <wj-flex-grid-column
+                header="ACTIONS"
+                align="center"
+                [width]="180">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-row="row">
+                  <div class="action-pill-group d-inline-flex align-items-center gap-1" (click)="$event.stopPropagation()">
+                    <button class="btn-grid-action" (click)="viewEmployee(row.dataItem.id)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <div class="divider-v"></div>
+                    <button class="btn-grid-action" (click)="editEmployee(row.dataItem.id)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <div class="divider-v"></div>
+                    <button class="btn-grid-action btn-grid-delete" (click)="deleteEmployee(row.dataItem.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </ng-template>
+              </wj-flex-grid-column>
 
-  <!-- <wj-flex-grid-column header="Salary Handling" binding="salaryHandling" [width]="160"></wj-flex-grid-column> -->
-
-  <wj-flex-grid-column header="Actions" [width]="170" align="center">
-
-    <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-row="row">
-
-      <i class="bi bi-eye text-primary me-3 action-icon"
-         (click)="viewEmployee(row.dataItem.id)"
-         title="View"></i>
-
-      <i class="bi bi-pencil me-3 action-icon"
-         (click)="editEmployee(row.dataItem.id)"
-         title="Update"></i>
-
-      <i class="bi bi-trash text-danger action-icon"
-         (click)="deleteEmployee(row.dataItem.id)"
-         title="Delete"></i>
-
-    </ng-template>
-
-  </wj-flex-grid-column>
-
-</wj-flex-grid>
+            </wj-flex-grid>
+          </div>
 
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </div>
 
 <!-- Modal -->
 <ng-container *ngIf="selectedEmployee">
   <app-employee-view-modal
     [employee]="selectedEmployee"
-    (close)="closeModal()"
-  ></app-employee-view-modal>
+    (close)="closeModal()">
+  </app-employee-view-modal>
 </ng-container>
-
-<!-- custom editors -->
-<!-- <wj-input-date #theInputDate format="MM/dd/yyyy" [isRequired]="false">
-</wj-input-date>
-<wj-input-time #theInputTime format="HH:mm" [isRequired]="false">
-</wj-input-time> -->
