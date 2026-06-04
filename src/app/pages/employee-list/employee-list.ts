@@ -1,26 +1,27 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { EmployeeService } from '../../services/employee.service';
 import { SelectedEmployeeService } from '../../services/selected-employee.service';
-import { Employee } from '../../models/employee.model';
+
 import { EmployeeViewModalComponent } from '../../shared/employee-view-modal';
 
 import { WjGridModule } from '@mescius/wijmo.angular2.grid';
 import { WjGridFilterModule } from '@mescius/wijmo.angular2.grid.filter';
-
-import { FlexGrid } from '@mescius/wijmo.grid';
-import { FlexGridFilter } from '@mescius/wijmo.grid.filter';
 import { WjGridSearchModule } from '@mescius/wijmo.angular2.grid.search';
 import { WjInputModule } from '@mescius/wijmo.angular2.input';
 
-/**
- * Grid model
- */
+import { FlexGrid } from '@mescius/wijmo.grid';
+import { FlexGridFilter } from '@mescius/wijmo.grid.filter';
+import { Employee } from '../../models/employee';
+
 interface EmployeeGridRow extends Employee {
   responsibilitiesText: string;
-  dailySalaryFormatted: string;
+  salaryFormatted: string;
+  department?: string;
 }
 
 @Component({
@@ -32,86 +33,109 @@ interface EmployeeGridRow extends Employee {
     WjGridModule,
     WjGridFilterModule,
     WjGridSearchModule,
-    WjInputModule
+    WjInputModule,
   ],
   templateUrl: './employee-list.html',
-  styleUrls: ['./employee-list.css']
+  styleUrls: ['./employee-list.css'],
 })
-export class EmployeeListComponent implements OnInit, AfterViewInit {
-
-  /** Grid data */
+export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
   employees: EmployeeGridRow[] = [];
 
-  /** Modal */
   selectedEmployee?: Employee;
 
   selectedId: number | null = null;
 
-  /** Wijmo grid reference */
   @ViewChild('flex', { static: false }) flex!: FlexGrid;
 
-  /** Filter instance */
   private filter!: FlexGridFilter;
+  private destroy$ = new Subject<void>();
+  private filterInitialized = false;
 
   constructor(
     private employeeService: EmployeeService,
     private selectedEmployeeService: SelectedEmployeeService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.employeeService.employees$.subscribe((list) => {
-      this.employees = list.map(emp => ({
-        ...emp,
-        responsibilitiesText: emp.responsibilities.join(', '),
-        dailySalaryFormatted: emp.dailySalary.toFixed(2)
-      }));
-    });
+    this.loadEmployees();
+  }
 
-    this.employeeService.refresh();
+  loadEmployees(): void {
+    this.employeeService
+      .getEmployees()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((list) => {
+        this.employees = list.map((emp) => ({
+          ...emp,
+          responsibilitiesText: emp.Responsibilities?.map((r) => r.name).join(', ') ?? '',
+          salaryFormatted: Number(emp.dailySalary).toFixed(2),
+          department: emp.Department?.name,
+        }));
+        // Explicitly mark for check after async data arrives
+        this.cdr.markForCheck();
+      });
   }
 
   ngAfterViewInit(): void {
-    // IMPORTANT: activate Wijmo filter here
-    this.filter = new FlexGridFilter(this.flex, {
-      showFilterIcons: true
-    });
+    // Initialize filter with a small delay to ensure grid is fully rendered with data
+    setTimeout(() => {
+      if (this.flex && !this.filterInitialized && this.employees.length > 0) {
+        this.filter = new FlexGridFilter(this.flex, {
+          showFilterIcons: true,
+        });
+        this.filterInitialized = true;
+      }
+    }, 100);
   }
 
-  /** View employee */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   viewEmployee(id: number): void {
-    const emp = this.employeeService.getEmployeeById(id);
-    if (emp) {
-      this.selectedEmployee = emp;
-      this.selectedId = id;
-    }
+    this.employeeService
+      .getEmployeeById(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((emp) => {
+        this.selectedEmployee = emp;
+        this.selectedId = id;
+      });
   }
 
-  /** Close modal */
   closeModal(): void {
     this.selectedEmployee = undefined;
     this.selectedId = null;
   }
 
-  /** Edit */
   editEmployee(id: number): void {
     this.selectedEmployeeService.setSelected(id);
     this.router.navigate(['/update-employee'], {
-    skipLocationChange: true
+      skipLocationChange: true,
     });
   }
 
-  /** Delete */
   deleteEmployee(id: number): void {
-    const emp = this.employeeService.getEmployeeById(id);
-    if (!emp) return;
+    this.employeeService
+      .getEmployeeById(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((emp) => {
+        if (!emp) return;
 
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${emp.name} ${emp.surname}?`
-    );
+        const confirmed = window.confirm(
+          `Are you sure you want to delete ${emp.name} ${emp.surname}?`,
+        );
 
-    if (confirmed) {
-      this.employeeService.deleteEmployeeById(id);
-    }
+        if (confirmed) {
+          this.employeeService
+            .deleteEmployee(id)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+              this.loadEmployees();
+            });
+        }
+      });
   }
 }

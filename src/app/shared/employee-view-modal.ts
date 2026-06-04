@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Employee } from '../models/employee.model';
+import { Employee } from '../models/employee';
 
 @Component({
   selector: 'app-employee-view-modal',
@@ -13,7 +13,12 @@ import { Employee } from '../models/employee.model';
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Employee Details</h5>
-            <button type="button" class="btn-close" aria-label="Close" (click)="close.emit()"></button>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="close.emit()"
+            ></button>
           </div>
           <div class="modal-body">
             <dl class="row">
@@ -27,13 +32,15 @@ import { Employee } from '../models/employee.model';
               <dd class="col-sm-8">{{ employee?.dateOfBirth }}</dd>
 
               <dt class="col-sm-4">Department</dt>
-              <dd class="col-sm-8">{{ employee?.department }}</dd>
+              <dd class="col-sm-8">{{ employee?.Department?.name ?? 'N/A' }}</dd>
 
               <dt class="col-sm-4">Responsibilities</dt>
-              <dd class="col-sm-8">{{ employee?.responsibilities?.join(', ') }}</dd>
+              <dd class="col-sm-8">{{ getResponsibilitiesText() }}</dd>
 
               <dt class="col-sm-4">Daily Salary</dt>
-              <dd class="col-sm-8">{{ employee ? (employee.dailySalary.toFixed(2)) : '' }}</dd>
+              <dd class="col-sm-8">
+                {{ employee ? (employee.dailySalary | number: '1.2-2') : '' }}
+              </dd>
               <dt class="col-sm-4">Salary Handling</dt>
               <dd class="col-sm-8">{{ employee?.salaryHandling }}</dd>
             </dl>
@@ -44,9 +51,16 @@ import { Employee } from '../models/employee.model';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class EmployeeViewModalComponent {
   @Input() employee?: Employee;
   @Output() close = new EventEmitter<void>();
+
+  getResponsibilitiesText(): string {
+    if (!this.employee?.Responsibilities || this.employee.Responsibilities.length === 0) {
+      return 'None';
+    }
+    return this.employee.Responsibilities.map((r) => r.name).join(', ');
+  }
 }
