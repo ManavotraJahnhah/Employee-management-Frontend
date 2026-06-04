@@ -10,6 +10,7 @@ import { Responsibility } from '../models/Responsibility';
   providedIn: 'root',
 })
 export class EmployeeService {
+  // Service HTTP centralisé pour l'accès à l'API backend
   // 🌐 Base API URL (centralized)
   private apiUrl = 'http://localhost:3000';
 

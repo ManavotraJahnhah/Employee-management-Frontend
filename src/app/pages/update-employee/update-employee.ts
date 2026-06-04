@@ -235,3 +235,9 @@ export class UpdateEmployeeComponent implements OnInit {
     }, 500);
   }
 }
+
+// Composant UpdateEmployeeComponent : gère la création et la mise à jour d'un employé
+// Utilise Formly (forms dynamiques) pour construire le formulaire à partir de `fields`
+// - loadDepartmentsAndResponsibilities() : charge les options pour les selects
+// - updateFields() : injecte dynamiquement les options chargées dans les champs Formly
+// - saveEmployee() : validez le formulaire, puis crée ou met à jour via EmployeeService

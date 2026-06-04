@@ -64,3 +64,8 @@ export class EmployeeViewModalComponent {
     return this.employee.Responsibilities.map((r) => r.name).join(', ');
   }
 }
+
+// Composant modal pour afficher les détails d'un employé
+// - Reçoit l'objet `employee` via @Input
+// - Émet un événement `close` quand l'utilisateur ferme la modal
+// - Méthode utilitaire `getResponsibilitiesText` pour formater la liste

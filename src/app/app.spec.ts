@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 
+// Fichier de tests unitaires pour le composant racine. Géré par Angular CLI/Jest/Karma.
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({

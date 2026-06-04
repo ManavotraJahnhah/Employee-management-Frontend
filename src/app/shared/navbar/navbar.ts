@@ -11,6 +11,8 @@ import { RouterLink } from '@angular/router';
 })
 export class NavbarComponent  {
 
+  // Composant de navigation principal visible sur toutes les pages
+  // Fournit des liens vers Home, Employee List et Create Employee
   constructor() {}
 
 }

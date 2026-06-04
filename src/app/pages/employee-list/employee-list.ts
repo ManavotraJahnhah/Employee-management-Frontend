@@ -139,3 +139,13 @@ export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 }
+
+// Composant EmployeeListComponent :
+// - charge la liste des employés via EmployeeService
+// - affiche les données dans une grille (Wijmo FlexGrid)
+// - gère la consultation, l'édition (navigation vers UpdateEmployee) et la suppression
+// Méthodes clés :
+// - loadEmployees() : récupère et transforme les données pour l'affichage
+// - viewEmployee(id) : charge un employé et ouvre la modal de détails
+// - editEmployee(id) : partage l'id sélectionné puis navigue vers la page d'édition
+// - deleteEmployee(id) : confirmation utilisateur puis suppression et rechargement

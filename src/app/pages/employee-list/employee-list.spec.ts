@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmployeeListComponent } from './employee-list';
 
+// Tests unitaires pour EmployeeListComponent : vérifie la création du composant
 describe('EmployeeListComponent', () => {
   let component: EmployeeListComponent;
   let fixture: ComponentFixture<EmployeeListComponent>;

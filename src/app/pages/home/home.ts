@@ -11,3 +11,5 @@ import { RouterLink } from '@angular/router';
 })
 export class HomeComponent {}
 
+// Composant Home : page d'accueil statique de l'application
+

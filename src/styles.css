@@ -1,5 +1,8 @@
 @import '@mescius/wijmo.styles/wijmo.css';
 
+/* Feuille de styles globale de l'application
+  Contient des variables, utilitaires et règles globales utilisées par les composants */
+
 div:has(a[href^="https://developer.mescius.com/licensing/wijmo"]) {
     display: none !important;
 }

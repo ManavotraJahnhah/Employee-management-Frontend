@@ -17,3 +17,6 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
   title = 'employee-management';
 }
+
+// Composant racine `AppComponent` : point d'entrée de l'application Angular.
+// Il contient la barre de navigation et le `RouterOutlet` pour les pages.

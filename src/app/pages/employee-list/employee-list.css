@@ -166,3 +166,5 @@
 .employee-grid.wj-flexgrid {
   width: 100% !important; /* Forces the host element to match the card body */
 }
+
+/* Styles pour la page Employee List : badges, grille et actions */
