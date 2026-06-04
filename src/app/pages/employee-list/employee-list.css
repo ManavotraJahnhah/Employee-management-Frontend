@@ -13,53 +13,6 @@
   letter-spacing: -0.3px;
 }
 
-/* Add Button Overhaul */
-.btn-add {
-  background-color: #0d6efd !important;
-  border: none !important;
-  font-size: 0.9rem;
-  font-weight: 500;
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
-  transition: transform 0.2s, opacity 0.2s;
-}
-.btn-add:hover {
-  transform: translateY(-1px);
-  opacity: 0.95;
-}
-
-/* ==========================================================================
-   TOOLBAR & WIJMO SEARCH FIELD
-   ========================================================================== */
-.search-container {
-  width: 100%;
-  max-width: 320px;
-}
-
-/* Target internal search control component layout precisely */
-::ng-deep .modern-search .wj-form-control {
-  width: 100% !important;
-  border-radius: 8px !important;
-  border: 1px solid #e2e8f0 !important;
-  padding-left: 36px !important;
-  height: 40px !important;
-  font-size: 0.88rem !important;
-  color: #475569 !important;
-  background-color: #f8fafc !important;
-  transition: all 0.2s ease;
-}
-
-::ng-deep .modern-search .wj-form-control:focus {
-  background-color: #ffffff !important;
-  border-color: #cbd5e1 !important;
-  box-shadow: none !important;
-}
-
-/* Re-style Wijmo magnifying icon */
-::ng-deep .modern-search .wj-input-group-btn {
-  left: 12px !important;
-  color: #94a3b8 !important;
-}
-
 /* Total Badge UI */
 .total-badge {
   font-size: 0.85rem;
