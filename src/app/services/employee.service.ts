@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Employee } from '../models/Employee';
-import { Department } from '../models/Department';
-import { Responsibility } from '../models/Responsibility';
 
 @Injectable({
   providedIn: 'root',
@@ -42,21 +40,5 @@ export class EmployeeService {
 
   checkEmployeeCode(code: string) {
     return this.http.get<{ available: boolean }>(`${this.apiUrl}/employees/check-code/${code}`);
-  }
-
-  // =========================
-  // 🏢 DEPARTMENTS
-  // =========================
-
-  getDepartments(): Observable<Department[]> {
-    return this.http.get<Department[]>(`${this.apiUrl}/departments`);
-  }
-
-  // =========================
-  // 📌 RESPONSIBILITIES
-  // =========================
-
-  getResponsibilities(): Observable<Responsibility[]> {
-    return this.http.get<Responsibility[]>(`${this.apiUrl}/responsibilities`);
   }
 }

@@ -12,6 +12,8 @@ import { Department } from '../../models/Department';
 import { Responsibility } from '../../models/Responsibility';
 import { map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { DepartmentService } from '../../services/department.service';
+import { ResponsibilityService } from '../../services/responsibility.service';
 
 interface EmployeeFormModel {
   employeeCode: string;
@@ -60,6 +62,8 @@ export class UpdateEmployeeComponent implements OnInit {
 
   constructor(
     private employeeService: EmployeeService,
+    private departmentService: DepartmentService,
+    private responsibilityService: ResponsibilityService,
     private selectedEmployeeService: SelectedEmployeeService,
     private router: Router,
   ) {}
@@ -92,7 +96,7 @@ export class UpdateEmployeeComponent implements OnInit {
   }
 
   private loadDepartmentsAndResponsibilities(): void {
-    this.employeeService.getDepartments().subscribe((depts) => {
+    this.departmentService.getDepartments().subscribe((depts) => {
       this.departments = depts;
       this.departmentOptions = depts.map((d) => ({
         label: d.name,
@@ -101,7 +105,7 @@ export class UpdateEmployeeComponent implements OnInit {
       this.updateFields();
     });
 
-    this.employeeService.getResponsibilities().subscribe((resps) => {
+    this.responsibilityService.getResponsibilities().subscribe((resps) => {
       this.responsibilities = resps;
       this.responsibilityOptions = resps.map((r) => ({
         label: r.name,
