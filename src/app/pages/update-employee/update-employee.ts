@@ -7,11 +7,14 @@ import { Router } from '@angular/router';
 
 import { EmployeeService } from '../../services/employee.service';
 import { SelectedEmployeeService } from '../../services/selected-employee.service';
-import { Employee } from '../../models/employee';
+import { Employee } from '../../models/Employee';
 import { Department } from '../../models/Department';
 import { Responsibility } from '../../models/Responsibility';
+import { map, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 interface EmployeeFormModel {
+  employeeCode: string;
   name: string;
   surname: string;
   dateOfBirth: string;
@@ -31,6 +34,7 @@ interface EmployeeFormModel {
 export class UpdateEmployeeComponent implements OnInit {
   form = new FormGroup({});
   model: EmployeeFormModel = {
+    employeeCode: '',
     name: '',
     surname: '',
     dateOfBirth: '',
@@ -72,11 +76,14 @@ export class UpdateEmployeeComponent implements OnInit {
 
       this.employeeService.getEmployeeById(selectedId).subscribe((emp) => {
         this.model = {
+          employeeCode: emp.employeeCode,
           name: emp.name,
           surname: emp.surname,
           dateOfBirth: emp.dateOfBirth?.toString().split('T')[0] ?? '',
           departmentId: emp.Department?.id ?? 0,
-          responsibilities: emp.Responsibilities?.map((r) => r.id).filter((id): id is number => id !== undefined) ?? [],
+          responsibilities:
+            emp.Responsibilities?.map((r) => r.id).filter((id): id is number => id !== undefined) ??
+            [],
           dailySalary: emp.dailySalary,
           salaryHandling: emp.salaryHandling,
         };
@@ -118,6 +125,38 @@ export class UpdateEmployeeComponent implements OnInit {
   }
 
   fields: FormlyFieldConfig[] = [
+    {
+      key: 'employeeCode',
+      type: 'input',
+      props: {
+        label: 'Employee Code',
+        placeholder: 'EMP0001',
+        required: true,
+      },
+      modelOptions: {
+        updateOn: 'change',
+        debounce: {
+          default: 400,
+        },
+      },
+      asyncValidators: {
+        employeeCodeExists: {
+          expression: (control: any) => {
+            const code = control.value?.trim();
+
+            if (!code || code.length < 3) {
+              return of(true);
+            }
+
+            return of(code).pipe(
+              switchMap((value) => this.employeeService.checkEmployeeCode(value)),
+              map((res) => res.available),
+            );
+          },
+          message: 'Employee code already exists',
+        },
+      },
+    },
     {
       key: 'name',
       type: 'input',
@@ -206,6 +245,7 @@ export class UpdateEmployeeComponent implements OnInit {
     }
 
     const payload: EmployeeFormModel = {
+      employeeCode: this.model.employeeCode,
       name: this.model.name,
       surname: this.model.surname,
       dateOfBirth: this.model.dateOfBirth,

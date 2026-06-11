@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -16,7 +23,7 @@ import { WjInputModule } from '@mescius/wijmo.angular2.input';
 
 import { FlexGrid } from '@mescius/wijmo.grid';
 import { FlexGridFilter } from '@mescius/wijmo.grid.filter';
-import { Employee } from '../../models/employee';
+import { Employee } from '../../models/Employee';
 
 interface EmployeeGridRow extends Employee {
   responsibilitiesText: string;

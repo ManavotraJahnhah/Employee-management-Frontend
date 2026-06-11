@@ -5,6 +5,7 @@ import { Responsibility } from './Responsibility';
 // Correspond approximativement au modèle Sequelize exposé par l'API
 export interface Employee {
   id?: number;
+  employeeCode: string;
   name: string;
   surname: string;
   dailySalary: number;

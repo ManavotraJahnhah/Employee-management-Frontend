@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Employee } from '../models/employee';
+import { Employee } from '../models/Employee';
 import { Department } from '../models/Department';
 import { Responsibility } from '../models/Responsibility';
 
@@ -38,6 +38,10 @@ export class EmployeeService {
 
   deleteEmployee(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/employees/${id}`);
+  }
+
+  checkEmployeeCode(code: string) {
+    return this.http.get<{ available: boolean }>(`${this.apiUrl}/employees/check-code/${code}`);
   }
 
   // =========================

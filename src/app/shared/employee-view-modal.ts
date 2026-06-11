@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Employee } from '../models/employee';
+import { Employee } from '../models/Employee';
 
 @Component({
   selector: 'app-employee-view-modal',
