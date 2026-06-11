@@ -1,1 +1,112 @@
-<p>departments works!</p>
+<!-- Vue liste des employés : affiche la grille, la barre de recherche et les actions -->
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card employee-card border-0">
+        <!-- Header -->
+        <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+          <div
+            class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3"
+          >
+            <h2 class="mb-0 fw-semibold d-flex align-items-center header-title">
+              <i class="bi bi-people-fill text-primary me-3 fs-4"></i>
+              Department List
+            </h2>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body p-4">
+          <!-- Toolbar -->
+          <div
+            class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4"
+          >
+            <div class="total-badge text-muted">
+              Total Departments:
+              <span class="badge-count text-primary fw-semibold">{{ departments.length }}</span>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div
+            *ngIf="departments.length === 0"
+            class="alert alert-warning border-0 rounded-4 p-4 d-flex align-items-center"
+          >
+            <i class="bi bi-exclamation-circle-fill me-3 fs-4 text-warning"></i>
+            <div>
+              <strong class="d-block mb-1">No data available</strong>
+              <span class="text-muted small"
+                >Try adjusting your search criteria or adding a new Department.</span
+              >
+            </div>
+          </div>
+
+          <!-- GRID -->
+          <div class="grid-wrapper" *ngIf="departments.length > 0">
+            <wj-flex-grid
+              #flex
+              class="department-grid"
+              [itemsSource]="departments"
+              [autoGenerateColumns]="false"
+              [isReadOnly]="true"
+              [allowAddNew]="false"
+              [allowDelete]="false"
+              [allowSorting]="true"
+              [allowDragging]="'Both'"
+              [allowResizing]="'Both'"
+              [selectionMode]="'Row'"
+              [showMarquee]="false"
+              [headersVisibility]="'Column'"
+              [stickyHeaders]="true"
+            >
+              <!-- NAME -->
+              <wj-flex-grid-column header="NAME" binding="name" [width]="'*'">
+              </wj-flex-grid-column>
+
+              <!-- DESCRIPTION -->
+              <wj-flex-grid-column header="DESCRIPTION" binding="description" [width]="'2*'">
+              </wj-flex-grid-column>
+
+              <!-- ACTIONS -->
+              <wj-flex-grid-column header="ACTIONS" align="center" [width]="180">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-row="row">
+                  <div
+                    class="action-pill-group d-inline-flex align-items-center gap-1"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <button class="btn-grid-action" (click)="viewDepartment(row.dataItem.id)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+
+                    <div class="divider-v"></div>
+
+                    <button class="btn-grid-action" (click)="editDepartment(row.dataItem.id)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+
+                    <div class="divider-v"></div>
+
+                    <button
+                      class="btn-grid-action btn-grid-delete"
+                      (click)="deleteDepartment(row.dataItem.id)"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </ng-template>
+              </wj-flex-grid-column>
+            </wj-flex-grid>
+          </div>
+        </div>
+
+        <!-- MODAL -->
+        <ng-container *ngIf="selectedDepartment">
+          <app-department-view-modal
+            [department]="selectedDepartment"
+            (close)="closeModal()"
+          ></app-department-view-modal>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
