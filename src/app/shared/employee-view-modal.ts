@@ -22,6 +22,9 @@ import { Employee } from '../models/Employee';
           </div>
           <div class="modal-body">
             <dl class="row">
+              <dt class="col-sm-4">Employee Code</dt>
+              <dd class="col-sm-8">{{ employee?.employeeCode }}</dd>
+
               <dt class="col-sm-4">Name</dt>
               <dd class="col-sm-8">{{ employee?.name }}</dd>
 

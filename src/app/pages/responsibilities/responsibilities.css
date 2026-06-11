@@ -1,0 +1,170 @@
+/* ==========================================================================
+   GLOBAL LAYOUT & CARD ELEVATION
+   ========================================================================== */
+.responsibility-card {
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+}
+
+.header-title {
+  color: #1e293b;
+  font-size: 1.5rem;
+  letter-spacing: -0.3px;
+}
+
+/* Total Badge UI */
+.total-badge {
+  font-size: 0.85rem;
+  background-color: #f1f5f9;
+  padding: 6px 14px;
+  border-radius: 8px;
+}
+.badge-count {
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   WIJMO GRID INTERACTION & BORDERLESS DESIGN
+   ========================================================================== */
+.grid-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.responsibility-grid.wj-flexgrid {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 600px;
+  border: none !important;
+}
+
+/* Header Cells Override */
+.responsibility-grid ::ng-deep .wj-colheaders .wj-cell {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  font-weight: 600 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.8px;
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-right: none !important;
+  padding: 14px 20px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Body Cells Custom Overrides */
+.responsibility-grid ::ng-deep .wj-cells .wj-cell {
+  border-bottom: 1px solid #f1f5f9 !important;
+  border-right: none !important;
+  padding: 16px 20px !important;
+  font-size: 0.9rem;
+  color: #475569;
+  background: #ffffff;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Clean Row Striping matching image_fe8985.png */
+.responsibility-grid ::ng-deep .wj-cells .wj-alt {
+  background: #fcfdfe !important;
+}
+
+/* Clean Hover Row Effect */
+.responsibility-grid ::ng-deep .wj-cells .wj-row:hover .wj-cell {
+  background: #f8fafc !important;
+}
+
+/* Active Highlight Row Color Correction */
+.responsibility-grid ::ng-deep .wj-cells .wj-cell.wj-state-selected {
+  background: #f0f7ff !important;
+  color: #1e40af !important;
+}
+
+/* Remove default blue accessibility boxes */
+.responsibility-grid ::ng-deep .wj-marquee {
+  display: none !important;
+}
+
+/* ==========================================================================
+   DEPARTMENT PILL SHADES
+   ========================================================================== */
+.dept-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 50px;
+  min-width: 85px;
+}
+
+.dept-it {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.dept-finance {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.dept-hr {
+  background-color: #ffedd5;
+  color: #c2410c;
+}
+
+.dept-marketing {
+  background-color: #ccfbf1;
+  color: #0f766e;
+}
+
+/* ==========================================================================
+   MINIMAL COMPACT ACTION PILL GROUP
+   ========================================================================== */
+.action-pill-group {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 2px 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.btn-grid-action {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+  border-radius: 4px;
+}
+
+.btn-grid-action:hover {
+  color: #475569;
+  background-color: #f1f5f9;
+}
+
+.btn-grid-action.btn-grid-delete:hover {
+  color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Tiny vertical line separators between actions inside the pill */
+.divider-v {
+  width: 1px;
+  height: 16px;
+  background-color: #e2e8f0;
+}
+
+.responsibility-grid.wj-flexgrid {
+  width: 100% !important; /* Forces the host element to match the card body */
+}
+
+/* Styles pour la page responsibility List : badges, grille et actions */

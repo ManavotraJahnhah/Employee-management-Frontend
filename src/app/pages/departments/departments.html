@@ -46,18 +46,6 @@
           </button>
         </div>
 
-        <!-- EMPTY STATE -->
-        <div
-          *ngIf="departments.length === 0"
-          class="alert alert-warning border-0 rounded-4 p-4 d-flex align-items-center"
-        >
-          <i class="bi bi-exclamation-circle-fill me-3 fs-4 text-warning"></i>
-          <div>
-            <strong class="d-block mb-1">No data available</strong>
-            <span class="text-muted small"> Try adding a new department. </span>
-          </div>
-        </div>
-
         <!-- GRID -->
         <div class="grid-wrapper m-4" *ngIf="departments.length > 0">
           <wj-flex-grid
