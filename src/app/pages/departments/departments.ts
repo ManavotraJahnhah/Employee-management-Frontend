@@ -7,11 +7,11 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { DepartmentService } from '../../services/department.service';
+import { Department } from '../../models/Department';
 
 import { WjGridModule } from '@mescius/wijmo.angular2.grid';
 import { WjGridFilterModule } from '@mescius/wijmo.angular2.grid.filter';
@@ -21,9 +21,7 @@ import { WjInputModule } from '@mescius/wijmo.angular2.input';
 import { FlexGrid } from '@mescius/wijmo.grid';
 import { FlexGridFilter } from '@mescius/wijmo.grid.filter';
 
-import { Department } from '../../models/Department';
-import { DepartmentViewModalComponent } from '../../shared/department-view-modal';
-import { SelectedDepartmentService } from '../../services/slected-department.service';
+import { DepartmentModalComponent } from '../department-modal/department-modal';
 
 interface DepartmentGridRow extends Department {
   employeeCount: number;
@@ -32,26 +30,31 @@ interface DepartmentGridRow extends Department {
 @Component({
   selector: 'app-department-list',
   standalone: true,
-  imports: [CommonModule, WjGridModule, WjGridFilterModule, WjGridSearchModule, WjInputModule, DepartmentViewModalComponent],
+  imports: [
+    CommonModule,
+    WjGridModule,
+    WjGridFilterModule,
+    WjGridSearchModule,
+    WjInputModule,
+    DepartmentModalComponent,
+  ],
   templateUrl: './departments.html',
   styleUrls: ['./departments.css'],
 })
 export class DepartmentListComponent implements OnInit, AfterViewInit, OnDestroy {
   departments: DepartmentGridRow[] = [];
 
-  selectedDepartment?: Department;
-  selectedId: number | null = null;
+  modalOpen = false;
+  selectedDepartment: Department | null = null;
 
   @ViewChild('flex', { static: false }) flex!: FlexGrid;
 
-  private filter!: FlexGridFilter;
   private destroy$ = new Subject<void>();
   private filterInitialized = false;
+  private filter!: FlexGridFilter;
 
   constructor(
     private departmentService: DepartmentService,
-    private selectedDepartmentService: SelectedDepartmentService,
-    private router: Router,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -89,45 +92,54 @@ export class DepartmentListComponent implements OnInit, AfterViewInit, OnDestroy
     this.destroy$.complete();
   }
 
+  // ✅ SINGLE ENTRY POINT (fixes double click issue)
+  private openModal(dept: Department | null): void {
+    this.selectedDepartment = dept;
+    this.modalOpen = true;
+  }
+
+  // VIEW
   viewDepartment(id: number): void {
-    this.departmentService
-      .getDepartmentById(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((dept) => {
-        this.selectedDepartment = dept;
-        this.selectedId = id;
-      });
-  }
-
-  closeModal(): void {
-    this.selectedDepartment = undefined;
-    this.selectedId = null;
-  }
-
-  editDepartment(id: number): void {
-    this.selectedDepartmentService.setSelected(id);
-    this.router.navigate(['/update-department'], {
-      skipLocationChange: true,
+    this.departmentService.getDepartmentById(id).subscribe((dept) => {
+      this.openModal(dept);
     });
   }
 
+  // CREATE
+  openCreateModal(): void {
+    this.openModal(null);
+  }
+
+  // EDIT
+  editDepartment(id: number): void {
+    this.departmentService.getDepartmentById(id).subscribe((dept) => {
+      this.openModal(dept);
+    });
+  }
+
+  // CLOSE
+  closeModal(): void {
+    this.modalOpen = false;
+    this.selectedDepartment = null;
+  }
+
+  // RELOAD
+  reloadDepartments(): void {
+    this.loadDepartments();
+  }
+
+  // DELETE
   deleteDepartment(id: number): void {
-    this.departmentService
-      .getDepartmentById(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((dept) => {
-        if (!dept) return;
+    this.departmentService.getDepartmentById(id).subscribe((dept) => {
+      if (!dept) return;
 
-        const confirmed = window.confirm(`Are you sure you want to delete ${dept.name}?`);
+      const confirmed = window.confirm(`Are you sure you want to delete ${dept.name}?`);
 
-        if (confirmed) {
-          this.departmentService
-            .deleteDepartment(id)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(() => {
-              this.loadDepartments();
-            });
-        }
-      });
+      if (confirmed) {
+        this.departmentService.deleteDepartment(id).subscribe(() => {
+          this.loadDepartments();
+        });
+      }
+    });
   }
 }

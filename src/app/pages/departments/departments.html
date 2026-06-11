@@ -1,8 +1,8 @@
-<!-- Vue liste des employés : affiche la grille, la barre de recherche et les actions -->
+<!-- Vue liste des Departments : affiche la grill et les actions -->
 <div class="container py-5">
   <div class="row">
     <div class="col-lg-12">
-      <div class="card employee-card border-0">
+      <div class="card department-card border-0">
         <!-- Header -->
         <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
           <div
@@ -36,77 +36,88 @@
             <div>
               <strong class="d-block mb-1">No data available</strong>
               <span class="text-muted small"
-                >Try adjusting your search criteria or adding a new Department.</span
+                >Try adjusting your search criteria or adding a new department.</span
               >
             </div>
           </div>
 
-          <!-- GRID -->
-          <div class="grid-wrapper" *ngIf="departments.length > 0">
-            <wj-flex-grid
-              #flex
-              class="department-grid"
-              [itemsSource]="departments"
-              [autoGenerateColumns]="false"
-              [isReadOnly]="true"
-              [allowAddNew]="false"
-              [allowDelete]="false"
-              [allowSorting]="true"
-              [allowDragging]="'Both'"
-              [allowResizing]="'Both'"
-              [selectionMode]="'Row'"
-              [showMarquee]="false"
-              [headersVisibility]="'Column'"
-              [stickyHeaders]="true"
-            >
-              <!-- NAME -->
-              <wj-flex-grid-column header="NAME" binding="name" [width]="'*'">
-              </wj-flex-grid-column>
+          <button class="btn btn-primary" (click)="openCreateModal()">
+            <i class="bi bi-plus-circle"></i> Add Department
+          </button>
+        </div>
 
-              <!-- DESCRIPTION -->
-              <wj-flex-grid-column header="DESCRIPTION" binding="description" [width]="'2*'">
-              </wj-flex-grid-column>
-
-              <!-- ACTIONS -->
-              <wj-flex-grid-column header="ACTIONS" align="center" [width]="180">
-                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-row="row">
-                  <div
-                    class="action-pill-group d-inline-flex align-items-center gap-1"
-                    (click)="$event.stopPropagation()"
-                  >
-                    <button class="btn-grid-action" (click)="viewDepartment(row.dataItem.id)">
-                      <i class="bi bi-eye"></i>
-                    </button>
-
-                    <div class="divider-v"></div>
-
-                    <button class="btn-grid-action" (click)="editDepartment(row.dataItem.id)">
-                      <i class="bi bi-pencil"></i>
-                    </button>
-
-                    <div class="divider-v"></div>
-
-                    <button
-                      class="btn-grid-action btn-grid-delete"
-                      (click)="deleteDepartment(row.dataItem.id)"
-                    >
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </div>
-                </ng-template>
-              </wj-flex-grid-column>
-            </wj-flex-grid>
+        <!-- EMPTY STATE -->
+        <div
+          *ngIf="departments.length === 0"
+          class="alert alert-warning border-0 rounded-4 p-4 d-flex align-items-center"
+        >
+          <i class="bi bi-exclamation-circle-fill me-3 fs-4 text-warning"></i>
+          <div>
+            <strong class="d-block mb-1">No data available</strong>
+            <span class="text-muted small"> Try adding a new department. </span>
           </div>
         </div>
 
-        <!-- MODAL -->
-        <ng-container *ngIf="selectedDepartment">
-          <app-department-view-modal
-            [department]="selectedDepartment"
-            (close)="closeModal()"
-          ></app-department-view-modal>
-        </ng-container>
+        <!-- GRID -->
+        <div class="grid-wrapper m-4" *ngIf="departments.length > 0">
+          <wj-flex-grid
+            #flex
+            class="department-grid"
+            [itemsSource]="departments"
+            [autoGenerateColumns]="false"
+            [isReadOnly]="true"
+            [allowAddNew]="false"
+            [allowDelete]="false"
+            [allowSorting]="true"
+            [allowDragging]="'Both'"
+            [allowResizing]="'Both'"
+            [selectionMode]="'Row'"
+            [showMarquee]="false"
+            [headersVisibility]="'Column'"
+            [stickyHeaders]="true"
+          >
+            <!-- NAME -->
+            <wj-flex-grid-column header="NAME" binding="name" [width]="'*'"> </wj-flex-grid-column>
+
+            <!-- ACTIONS -->
+            <wj-flex-grid-column header="ACTIONS" align="center" [width]="180">
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-row="row">
+                <div
+                  class="action-pill-group d-inline-flex align-items-center gap-1"
+                  (click)="$event.stopPropagation()"
+                >
+                  <button class="btn-grid-action" (click)="viewDepartment(row.dataItem.id)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+
+                  <div class="divider-v"></div>
+
+                  <button class="btn-grid-action" (click)="editDepartment(row.dataItem.id)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+
+                  <div class="divider-v"></div>
+
+                  <button
+                    class="btn-grid-action btn-grid-delete"
+                    (click)="deleteDepartment(row.dataItem.id)"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </ng-template>
+            </wj-flex-grid-column>
+          </wj-flex-grid>
+        </div>
       </div>
+
+      <!-- SINGLE MODAL (CREATE + EDIT + VIEW) -->
+      <app-department-modal
+        [visible]="modalOpen"
+        [department]="selectedDepartment"
+        (closeModal)="closeModal()"
+        (saved)="reloadDepartments()"
+      ></app-department-modal>
     </div>
   </div>
 </div>
