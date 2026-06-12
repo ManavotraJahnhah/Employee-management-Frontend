@@ -102,6 +102,7 @@ export class DepartmentListComponent implements OnInit, AfterViewInit, OnDestroy
   viewDepartment(id: number): void {
     this.departmentService.getDepartmentById(id).subscribe((dept) => {
       this.openModal(dept);
+      this.cdr.detectChanges();
     });
   }
 
@@ -114,6 +115,7 @@ export class DepartmentListComponent implements OnInit, AfterViewInit, OnDestroy
   editDepartment(id: number): void {
     this.departmentService.getDepartmentById(id).subscribe((dept) => {
       this.openModal(dept);
+      this.cdr.detectChanges();
     });
   }
 

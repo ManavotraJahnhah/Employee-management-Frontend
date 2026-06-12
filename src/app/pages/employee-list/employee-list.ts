@@ -109,6 +109,7 @@ export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((emp) => {
         this.selectedEmployee = emp;
         this.selectedId = id;
+        this.cdr.detectChanges();
       });
   }
 

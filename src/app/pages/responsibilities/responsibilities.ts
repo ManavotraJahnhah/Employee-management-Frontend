@@ -102,6 +102,7 @@ export class ResponsibilityListComponent implements OnInit, AfterViewInit, OnDes
   viewResponsibility(id: number): void {
     this.responsibilityService.getResponsibilityById(id).subscribe((resp) => {
       this.openModal(resp);
+      this.cdr.detectChanges();
     });
   }
 
@@ -114,6 +115,7 @@ export class ResponsibilityListComponent implements OnInit, AfterViewInit, OnDes
   editResponsibility(id: number): void {
     this.responsibilityService.getResponsibilityById(id).subscribe((resp) => {
       this.openModal(resp);
+      this.cdr.detectChanges();
     });
   }
 
