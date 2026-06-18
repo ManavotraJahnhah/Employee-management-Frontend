@@ -38,7 +38,13 @@ export class EmployeeService {
     return this.http.delete<void>(`${this.apiUrl}/employees/${id}`);
   }
 
-  checkEmployeeCode(code: string) {
-    return this.http.get<{ available: boolean }>(`${this.apiUrl}/employees/check-code/${code}`);
+  checkEmployeeCode(code: string, employeeId?: number | null) {
+    let url = `${this.apiUrl}/employees/check-code/${code}`;
+
+    if (employeeId != null) {
+      url += `/${employeeId}`;
+    }
+
+    return this.http.get<{ available: boolean }>(url);
   }
 }

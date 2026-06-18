@@ -153,7 +153,7 @@ export class UpdateEmployeeComponent implements OnInit {
             }
 
             return of(code).pipe(
-              switchMap((value) => this.employeeService.checkEmployeeCode(value)),
+              switchMap((value) => this.employeeService.checkEmployeeCode(value, this.editId)),
               map((res) => res.available),
             );
           },
